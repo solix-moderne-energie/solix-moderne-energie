@@ -93,103 +93,44 @@ h1 span{display:block;color:var(--gold-light)}
 .advantages-link{text-align:center;margin-top:22px}
 
 /* GRANDE SURPRISE */
-.surprise-section{
- background:var(--cream);
- padding:10px 0 35px;
-}
-.surprise-banner{
- position:relative;
- display:grid;
- grid-template-columns:1fr 1.5fr;
- align-items:center;
- min-height:190px;
- overflow:hidden;
- border:1px solid #b58b5e;
- border-radius:17px;
- background:linear-gradient(110deg,#142b3b 0%,#17212c 53%,#b58b5e 100%);
- box-shadow:0 9px 25px rgba(20,43,59,.15);
- color:#fff;
-}
-.surprise-left{
- text-align:center;
- padding:22px 15px;
- border-right:1px solid #e5c69c99;
-}
+.surprise-section{background:var(--cream);padding:10px 0 35px}
+.surprise-banner{position:relative;display:grid;grid-template-columns:1fr 1.5fr;align-items:center;min-height:190px;overflow:hidden;border:1px solid #b58b5e;border-radius:17px;background:linear-gradient(110deg,#142b3b 0%,#17212c 53%,#b58b5e 100%);box-shadow:0 9px 25px rgba(20,43,59,.15);color:#fff}
+.surprise-left{text-align:center;padding:22px 15px;border-right:1px solid #e5c69c99}
 .surprise-gift{font-size:37px;margin-bottom:4px}
 .surprise-brand{font-size:17px;font-weight:800;margin-bottom:8px}
-.surprise-left h2{
- font-size:clamp(25px,3.5vw,39px);
- line-height:1.2;
- color:#e5c69c;
- font-weight:800;
-}
-.surprise-discount{
- font-size:27px;
- font-weight:800;
- margin-top:5px;
- color:white;
-}
-.surprise-right{
- padding:24px 25px;
- display:flex;
- align-items:center;
- justify-content:space-between;
- gap:15px;
-}
+.surprise-left h2{font-size:clamp(25px,3.5vw,39px);line-height:1.2;color:#e5c69c;font-weight:800}
+.surprise-discount{font-size:27px;font-weight:800;margin-top:5px;color:white}
+.surprise-right{padding:24px 25px;display:flex;align-items:center;justify-content:space-between;gap:15px}
 .surprise-text{max-width:360px}
-.surprise-text h3{
- font-size:clamp(20px,2.7vw,29px);
- line-height:1.3;
- margin-bottom:9px;
- color:white;
-}
-.surprise-text p{
- font-size:13px;
- color:#f8f6f0;
-}
+.surprise-text h3{font-size:clamp(20px,2.7vw,29px);line-height:1.3;margin-bottom:9px;color:white}
+.surprise-text p{font-size:13px;color:#f8f6f0}
 .surprise-text strong{color:#e5c69c}
-.surprise-action{
- flex-shrink:0;
- text-align:center;
-}
-.surprise-button{
- display:inline-flex;
- align-items:center;
- justify-content:center;
- padding:13px 19px;
- border-radius:30px;
- border:1px solid #e5c69c;
- background:#e5c69c;
- color:#142b3b;
- font-size:13px;
- font-weight:800;
- cursor:pointer;
- transition:.2s;
- box-shadow:0 5px 15px #0002;
-}
-.surprise-button:hover{
- background:#fff;
- transform:translateY(-3px);
-}
-.surprise-action small{
- display:block;
- margin-top:6px;
- color:#fff;
- font-size:10px;
-}
+.surprise-action{flex-shrink:0;text-align:center}
+.surprise-button{display:inline-flex;align-items:center;justify-content:center;padding:13px 19px;border-radius:30px;border:1px solid #e5c69c;background:#e5c69c;color:#142b3b;font-size:13px;font-weight:800;cursor:pointer;transition:.2s;box-shadow:0 5px 15px #0002}
+.surprise-button:hover{background:#fff;transform:translateY(-3px)}
+.surprise-action small{display:block;margin-top:6px;color:#fff;font-size:10px}
 
-/* FORMULAIRE CACHÉ AU DÉPART */
+/* FORMULAIRE DE PARTICIPATION */
+#participationModal{display:none;position:fixed;inset:0;z-index:10001;background:rgba(0,0,0,.72);padding:18px;align-items:center;justify-content:center}
+#participationModal.active{display:flex}
+.participation-box{position:relative;width:min(440px,100%);background:#fffdf8;border:1px solid var(--gold);border-radius:18px;padding:28px 22px;box-shadow:0 15px 50px #0005;animation:participationShow .25s ease}
+@keyframes participationShow{from{opacity:0;transform:translateY(15px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+.participation-close{position:absolute;right:13px;top:10px;width:34px;height:34px;border:1px solid #e5d8c4;border-radius:50%;background:#fff;color:var(--navy);font-size:20px;cursor:pointer}
+.participation-gift{text-align:center;font-size:37px;margin-bottom:5px}
+.participation-box h2{text-align:center;font-size:23px;color:var(--navy);margin-bottom:5px}
+.participation-description{text-align:center;font-size:12px;color:var(--muted);margin-bottom:20px}
+.participation-group{margin-bottom:15px}
+.participation-group label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}
+.participation-group input{width:100%;border:1px solid #dcd8d0;background:white;border-radius:9px;padding:13px;color:var(--navy);outline:none}
+.participation-group input:focus{border-color:var(--gold);box-shadow:0 0 0 3px #b58b5e20}
+.participation-submit{width:100%;border:0;border-radius:30px;padding:14px;background:var(--gold);color:white;font-size:14px;font-weight:800;cursor:pointer;transition:.2s}
+.participation-submit:hover{background:#967047;transform:translateY(-2px)}
+.participation-note{text-align:center;color:var(--muted);font-size:10px;margin-top:12px}
+
+/* FORMULAIRE DE DEVIS */
 #devisForm{display:none}
 #devisForm.form-visible{display:block}
-.form-open-message{
- display:none;
- padding:18px;
- margin-top:15px;
- background:#fffdf8;
- border:1px solid #e5c69c;
- border-radius:12px;
- text-align:center;
-}
+.form-open-message{display:none;padding:18px;margin-top:15px;background:#fffdf8;border:1px solid #e5c69c;border-radius:12px;text-align:center}
 .form-open-message.visible{display:block}
 
 /* ABOUT */
@@ -328,6 +269,8 @@ h1{font-size:clamp(30px,7vw,40px)}
 .surprise-text h3{font-size:22px}
 .surprise-text p{font-size:12px}
 .surprise-button{font-size:12px;padding:12px 19px}
+.participation-box{padding:25px 17px}
+.participation-box h2{font-size:21px}
 
 .about-grid,.contact-grid{grid-template-columns:1fr;gap:23px}
 .about-image{height:230px}
@@ -442,7 +385,7 @@ h1{font-size:clamp(30px,7vw,40px)}
 </div>
 </section>
 
-<!-- NOUVELLE GRANDE SURPRISE -->
+<!-- GRANDE SURPRISE -->
 <section class="surprise-section">
 <div class="container">
 <div class="surprise-banner">
@@ -465,6 +408,29 @@ h1{font-size:clamp(30px,7vw,40px)}
 </div>
 </div>
 </section>
+
+<!-- FENÊTRE DE PARTICIPATION -->
+<div id="participationModal" role="dialog" aria-modal="true" aria-labelledby="participationTitle">
+<div class="participation-box">
+<button type="button" class="participation-close" id="closeParticipation" aria-label="Fermer">×</button>
+<div class="participation-gift">🎁</div>
+<h2 id="participationTitle">Participez à notre surprise !</h2>
+<p class="participation-description">Entrez vos coordonnées pour valider votre participation.</p>
+
+<form id="participationForm">
+<div class="participation-group">
+<label for="participantName">Nom et prénom *</label>
+<input id="participantName" name="participantName" type="text" placeholder="Votre nom et prénom" autocomplete="name" required>
+</div>
+<div class="participation-group">
+<label for="participantPhone">Numéro de téléphone *</label>
+<input id="participantPhone" name="participantPhone" type="tel" placeholder="Votre numéro de téléphone" autocomplete="tel" required>
+</div>
+<button class="participation-submit" type="submit">Valider ma participation</button>
+<p class="participation-note">Après validation, WhatsApp s’ouvrira pour envoyer votre participation.</p>
+</form>
+</div>
+</div>
 
 <section class="section about" id="apropos">
 <div class="container about-grid">
@@ -621,7 +587,7 @@ menuToggle.setAttribute('aria-expanded','false');
 
 document.getElementById('year').textContent=new Date().getFullYear();
 
-/* OUVERTURE DU FORMULAIRE UNIQUEMENT APRÈS UN CLIC */
+/* OUVERTURE DU FORMULAIRE DE DEVIS */
 const devisForm=document.getElementById('devisForm');
 const formOpenMessage=document.getElementById('formOpenMessage');
 
@@ -633,8 +599,68 @@ devisForm.scrollIntoView({behavior:'smooth',block:'start'});
 },100);
 }
 
-document.getElementById('surpriseButton').addEventListener('click',openDevisForm);
+/* OUVERTURE DE LA FENÊTRE DE PARTICIPATION */
+const participationModal=document.getElementById('participationModal');
+const participationForm=document.getElementById('participationForm');
+const closeParticipation=document.getElementById('closeParticipation');
+const surpriseButton=document.getElementById('surpriseButton');
 
+function openParticipation(){
+participationModal.classList.add('active');
+document.body.style.overflow='hidden';
+setTimeout(()=>{
+document.getElementById('participantName').focus();
+},100);
+}
+
+function closeParticipationWindow(){
+participationModal.classList.remove('active');
+document.body.style.overflow='';
+}
+
+surpriseButton.addEventListener('click',openParticipation);
+closeParticipation.addEventListener('click',closeParticipationWindow);
+
+participationModal.addEventListener('click',event=>{
+if(event.target===participationModal){
+closeParticipationWindow();
+}
+});
+
+document.addEventListener('keydown',event=>{
+if(event.key==='Escape' && participationModal.classList.contains('active')){
+closeParticipationWindow();
+}
+});
+
+/* ENVOI DE LA PARTICIPATION VERS WHATSAPP */
+participationForm.addEventListener('submit',event=>{
+event.preventDefault();
+
+const name=document.getElementById('participantName').value.trim();
+const phone=document.getElementById('participantPhone').value.trim();
+
+if(!name || !phone){
+alert('Veuillez remplir votre nom et votre numéro de téléphone.');
+return;
+}
+
+const text=
+'Bonjour Modern Solar Énergie !\n\n'+
+'Je souhaite participer à votre GRANDE SURPRISE 🎁\n\n'+
+'Nom et prénom : '+name+'\n'+
+'Numéro de téléphone : '+phone+'\n\n'+
+'Je confirme ma participation.';
+
+const url='https://wa.me/21626621515?text='+encodeURIComponent(text);
+const win=window.open(url,'_blank');
+
+if(!win){
+window.location.href=url;
+}
+});
+
+/* LES BOUTONS DE DEVIS GARDENT LEUR FONCTION */
 document.querySelectorAll('[data-open-form]').forEach(button=>{
 button.addEventListener('click',()=>{
 openDevisForm();
@@ -682,7 +708,7 @@ status.textContent='Photo sélectionnée : '+file.name;
 });
 });
 
-/* FORMULAIRE VERS WHATSAPP */
+/* FORMULAIRE DE DEVIS VERS WHATSAPP */
 devisForm.addEventListener('submit',event=>{
 event.preventDefault();
 
