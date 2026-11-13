@@ -125,6 +125,7 @@ h1 span{display:block;color:var(--gold-light)}
 .participation-group input:focus{border-color:var(--gold);box-shadow:0 0 0 3px #b58b5e20}
 .participation-submit{width:100%;border:0;border-radius:30px;padding:14px;background:var(--gold);color:white;font-size:14px;font-weight:800;cursor:pointer;transition:.2s}
 .participation-submit:hover{background:#967047;transform:translateY(-2px)}
+.participation-submit:disabled{opacity:.6;cursor:wait;transform:none}
 .participation-note{text-align:center;color:var(--muted);font-size:10px;margin-top:12px}
 
 /* FORMULAIRE DE DEVIS */
@@ -569,6 +570,36 @@ h1{font-size:clamp(30px,7vw,40px)}
 </div>
 
 <script>
+/* CONFIGURATION FORMSPREE */
+const FORMSPREE_URL = 'https://formspree.io/f/xljbgbep';
+
+async function sendToFormspree(data) {
+    const response = await fetch(FORMSPREE_URL, {
+        method: 'POST',
+        body: data,
+        headers: {
+            'Accept': 'application/json'
+        }
+    });
+
+    let result = {};
+    try {
+        result = await response.json();
+    } catch (error) {
+        throw new Error('Réponse invalide de Formspree.');
+    }
+
+    if (!response.ok) {
+        throw new Error(
+            result.errors
+                ? result.errors.map(e => e.message).join(', ')
+                : 'Erreur Formspree.'
+        );
+    }
+
+    return result;
+}
+
 /* MENU MOBILE */
 const menuToggle=document.getElementById('menuToggle');
 const navLinks=document.getElementById('navLinks');
@@ -633,31 +664,67 @@ closeParticipationWindow();
 }
 });
 
-/* ENVOI DE LA PARTICIPATION VERS WHATSAPP */
-participationForm.addEventListener('submit',event=>{
-event.preventDefault();
+/* PARTICIPATION : FORMSPREE + WHATSAPP */
+participationForm.addEventListener('submit', async event => {
+    event.preventDefault();
 
-const name=document.getElementById('participantName').value.trim();
-const phone=document.getElementById('participantPhone').value.trim();
+    const name = document.getElementById('participantName').value.trim();
+    const phone = document.getElementById('participantPhone').value.trim();
 
-if(!name || !phone){
-alert('Veuillez remplir votre nom et votre numéro de téléphone.');
-return;
-}
+    if (!name || !phone) {
+        alert('Veuillez remplir votre nom et votre numéro de téléphone.');
+        return;
+    }
 
-const text=
-'Bonjour Modern Solar Énergie !\n\n'+
-'Je souhaite participer à votre GRANDE SURPRISE 🎁\n\n'+
-'Nom et prénom : '+name+'\n'+
-'Numéro de téléphone : '+phone+'\n\n'+
-'Je confirme ma participation.';
+    const button = participationForm.querySelector('button[type="submit"]');
+    const originalText = button.textContent;
 
-const url='https://wa.me/21626621515?text='+encodeURIComponent(text);
-const win=window.open(url,'_blank');
+    const whatsappText =
+        'Bonjour Modern Solar Énergie !\n\n' +
+        'Je souhaite participer à votre GRANDE SURPRISE 🎁\n\n' +
+        'Nom et prénom : ' + name + '\n' +
+        'Numéro de téléphone : ' + phone + '\n\n' +
+        'Je confirme ma participation.';
 
-if(!win){
-window.location.href=url;
-}
+    const whatsappURL =
+        'https://wa.me/21626621515?text=' + encodeURIComponent(whatsappText);
+
+    const data = new FormData();
+    data.append('_subject', 'Nouvelle participation - Grande Surprise');
+    data.append('Nom et prénom', name);
+    data.append('Téléphone', phone);
+    data.append('Type de demande', 'Participation Grande Surprise');
+
+    button.disabled = true;
+    button.textContent = 'Envoi en cours...';
+
+    /* فتح نافذة واتساب مسبقاً لتفادي حظر النوافذ المنبثقة */
+    const whatsappWindow = window.open('about:blank', '_blank');
+
+    try {
+        await sendToFormspree(data);
+
+        alert('Votre participation a été envoyée avec succès !');
+
+        if (whatsappWindow) {
+            whatsappWindow.location.href = whatsappURL;
+        } else {
+            window.location.href = whatsappURL;
+        }
+
+        participationForm.reset();
+        closeParticipationWindow();
+
+    } catch (error) {
+        if (whatsappWindow) whatsappWindow.close();
+
+        alert('Erreur lors de l’envoi par e-mail. Veuillez réessayer.');
+        console.error('Formspree:', error);
+
+    } finally {
+        button.disabled = false;
+        button.textContent = originalText;
+    }
 });
 
 /* LES BOUTONS DE DEVIS GARDENT LEUR FONCTION */
@@ -708,45 +775,107 @@ status.textContent='Photo sélectionnée : '+file.name;
 });
 });
 
-/* FORMULAIRE DE DEVIS VERS WHATSAPP */
-devisForm.addEventListener('submit',event=>{
-event.preventDefault();
+/* DEVIS : FORMSPREE + WHATSAPP */
+devisForm.addEventListener('submit', async event => {
+    event.preventDefault();
 
-const nom=document.getElementById('nom').value.trim();
-const telephone=document.getElementById('telephone').value.trim();
-const typeProjet=document.getElementById('typeProjet').value;
-const ville=document.getElementById('ville').value.trim();
-const message=document.getElementById('message').value.trim();
+    const nom = document.getElementById('nom').value.trim();
+    const telephone = document.getElementById('telephone').value.trim();
+    const typeProjet = document.getElementById('typeProjet').value;
+    const ville = document.getElementById('ville').value.trim();
+    const message = document.getElementById('message').value.trim();
 
-const missing=photoFields.filter(p=>!document.getElementById(p.id).files.length);
+    const missing = photoFields.filter(p =>
+        !document.getElementById(p.id).files.length
+    );
 
-if(missing.length){
-alert('Veuillez sélectionner les quatre photos demandées.');
-document.getElementById(missing[0].id).focus();
-return;
-}
+    if (missing.length) {
+        alert('Veuillez sélectionner les quatre photos demandées.');
+        document.getElementById(missing[0].id).focus();
+        return;
+    }
 
-for(const p of photoFields){
-const f=document.getElementById(p.id).files[0];
-if(!f.type.startsWith('image/')||f.size>8*1024*1024){
-alert('Vérifiez la photo « '+p.label+' » : image acceptée, maximum 8 Mo.');
-document.getElementById(p.id).focus();
-return;
-}
-}
+    for (const p of photoFields) {
+        const file = document.getElementById(p.id).files[0];
 
-const text='Bonjour Modern Solar Énergie,\n\nJe souhaite demander un devis.\n\nNom et prénom : '+nom+
-'\nTéléphone : '+telephone+
-'\nType de projet : '+typeProjet+
-'\nVille : '+(ville||'Non précisée')+
-'\nDescription : '+(message||'Non précisée')+
-'\n\nPhotos à joindre dans WhatsApp :\n'+
-photoFields.map(p=>'☑ '+p.label).join('\n')+
-'\n\nJe vais joindre les quatre photos à ce message.';
+        if (!file.type.startsWith('image/') || file.size > 8 * 1024 * 1024) {
+            alert('Vérifiez la photo « ' + p.label + ' » : image acceptée, maximum 8 Mo.');
+            document.getElementById(p.id).focus();
+            return;
+        }
+    }
 
-const url='https://wa.me/21626621515?text='+encodeURIComponent(text);
-const win=window.open(url,'_blank');
-if(!win)window.location.href=url;
+    const whatsappText =
+        'Bonjour Modern Solar Énergie,\n\nJe souhaite demander un devis.\n\n' +
+        'Nom et prénom : ' + nom +
+        '\nTéléphone : ' + telephone +
+        '\nType de projet : ' + typeProjet +
+        '\nVille : ' + (ville || 'Non précisée') +
+        '\nDescription : ' + (message || 'Non précisée') +
+        '\n\nPhotos à joindre dans WhatsApp :\n' +
+        photoFields.map(p => '☑ ' + p.label).join('\n') +
+        '\n\nJe vais joindre les quatre photos à ce message.';
+
+    const whatsappURL =
+        'https://wa.me/21626621515?text=' + encodeURIComponent(whatsappText);
+
+    /* تجهيز البيانات المرسلة إلى Formspree */
+    const data = new FormData();
+
+    data.append('_subject', 'Nouvelle demande de devis - Modern Solar Énergie');
+    data.append('Nom et prénom', nom);
+    data.append('Téléphone', telephone);
+    data.append('Type de projet', typeProjet);
+    data.append('Ville', ville || 'Non précisée');
+    data.append('Description du projet', message || 'Non précisée');
+    data.append('Type de demande', 'Demande de devis');
+
+    photoFields.forEach(p => {
+        const file = document.getElementById(p.id).files[0];
+        data.append(p.label, file.name);
+    });
+
+    const submitButton = devisForm.querySelector('button[type="submit"]');
+    const originalText = submitButton.textContent;
+
+    submitButton.disabled = true;
+    submitButton.textContent = 'Envoi en cours...';
+
+    /* فتح نافذة واتساب مسبقاً */
+    const whatsappWindow = window.open('about:blank', '_blank');
+
+    try {
+        await sendToFormspree(data);
+
+        alert('Votre demande a été envoyée avec succès !');
+
+        if (whatsappWindow) {
+            whatsappWindow.location.href = whatsappURL;
+        } else {
+            window.location.href = whatsappURL;
+        }
+
+        devisForm.reset();
+
+        photoFields.forEach(p => {
+            const preview = document.getElementById(p.preview);
+            const status = document.getElementById(p.status);
+
+            preview.style.display = 'none';
+            preview.removeAttribute('src');
+            status.textContent = '';
+        });
+
+    } catch (error) {
+        if (whatsappWindow) whatsappWindow.close();
+
+        alert('Impossible d’envoyer votre demande par e-mail. Veuillez réessayer.');
+        console.error('Formspree:', error);
+
+    } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = originalText;
+    }
 });
 
 /* ASSISTANT VIRTUEL FRANÇAIS / ARABE */
